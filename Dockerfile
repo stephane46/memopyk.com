@@ -31,12 +31,15 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # Expose port
 EXPOSE ${PORT:-3000}
 
-# Build frontend and serve statically with nginx
-RUN npm run build
+# Debug build process and file structure
+RUN echo "=== Build Debug Info ===" && \
+    ls -la && \
+    echo "=== Running npm run build ===" && \
+    npm run build && \
+    echo "=== Build completed, checking dist structure ===" && \
+    ls -la dist/ && \
+    if [ -d "dist/public" ]; then echo "Found dist/public"; ls -la dist/public/; else echo "No dist/public directory"; fi && \
+    echo "=== Build files inspection complete ==="
 
-# Use nginx for production serving
-FROM nginx:alpine
-COPY --from=0 /app/dist/public /usr/share/nginx/html
-COPY --from=0 /app/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Start with simple Node.js server for debugging
+CMD ["sh", "-c", "echo 'Starting debug server on port 3000' && node -e 'require(\"http\").createServer((req,res)=>{console.log(req.method,req.url);res.writeHead(200,{\"Content-Type\":\"text/plain\"});res.end(\"Debug server running - \" + new Date().toISOString())}).listen(3000,\"0.0.0.0\",()=>console.log(\"Debug server listening on 0.0.0.0:3000\"))'"]
