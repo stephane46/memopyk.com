@@ -8,7 +8,17 @@ import { getCachedSitemap, getCachedRobotsTxt, invalidateSitemapCache } from "./
 import { validateImageUrl } from "./image-validator";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Health check endpoint for deployment monitoring
+  // Basic health check endpoint for deployment monitoring
+  app.get("/health", (req, res) => {
+    res.status(200).json({ 
+      status: "healthy", 
+      timestamp: new Date().toISOString(),
+      version: "1.0.0",
+      environment: process.env.NODE_ENV || "development"
+    });
+  });
+
+  // Detailed health check with database connectivity
   app.get("/api/health", async (req, res) => {
     try {
       // Check database connectivity
@@ -17,7 +27,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "healthy", 
         timestamp: new Date().toISOString(),
         version: "1.0.0",
-        environment: process.env.NODE_ENV || "development"
+        environment: process.env.NODE_ENV || "development",
+        database: "connected"
       });
     } catch (error) {
       res.status(503).json({ 

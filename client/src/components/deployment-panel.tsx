@@ -315,7 +315,7 @@ function CoolifyStep({ target, onComplete, copyToClipboard }: {
   copyToClipboard: (text: string) => void 
 }) {
   const domain = target === 'staging' ? 'new.memopyk.com' : 'memopyk.com';
-  const repoUrl = 'https://github.com/your-username/memopyk.git'; // You'll need to update this
+  const repoUrl = 'https://github.com/stephane46/memopyk.com';
   
   return (
     <div className="space-y-6">
