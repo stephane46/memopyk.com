@@ -31,5 +31,12 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # Expose port
 EXPOSE ${PORT:-3000}
 
-# Start simplified production server
-CMD ["sh", "-c", "export NODE_ENV=production && echo 'Starting production server...' && node server/production.js"]
+# Build frontend and serve statically with nginx
+RUN npm run build
+
+# Use nginx for production serving
+FROM nginx:alpine
+COPY --from=0 /app/dist/public /usr/share/nginx/html
+COPY --from=0 /app/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
