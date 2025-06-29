@@ -22,7 +22,7 @@ COPY . .
 RUN npm run build
 
 # Copy built files to correct location for production serving
-RUN cp -r dist/public server/
+RUN mkdir -p server/public && cp -r dist/public/* server/public/
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
