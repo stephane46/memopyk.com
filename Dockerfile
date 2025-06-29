@@ -31,5 +31,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # Expose port
 EXPOSE ${PORT:-3000}
 
-# Debug environment variables and start the application with error handling
-CMD ["sh", "-c", "echo 'Environment variables:' && printenv | grep -E '(NODE_ENV|PORT|DATABASE_URL)' && echo 'Contents of dist directory:' && ls -la dist/ && echo 'Starting application...' && npm start || (echo 'Application failed to start' && tail -f /dev/null)"]
+# Start application with production environment and explicit Node.js execution
+CMD ["sh", "-c", "export NODE_ENV=production && echo 'Starting production server...' && node dist/index.js"]
