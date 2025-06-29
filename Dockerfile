@@ -31,5 +31,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # Expose port
 EXPOSE ${PORT:-3000}
 
-# Start the application
-CMD ["npm", "start"]
+# Debug environment variables and start the application
+CMD ["sh", "-c", "echo 'Environment variables:' && printenv | grep -E '(NODE_ENV|PORT|DATABASE_URL)' && echo 'Starting application...' && npm start"]
