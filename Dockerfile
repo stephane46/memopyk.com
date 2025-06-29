@@ -1,63 +1,35 @@
-# Multi-stage build for MEMOPYK production deployment
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
-# Install system dependencies for video processing
+# Install system dependencies including FFmpeg
 RUN apk add --no-cache \
     ffmpeg \
-    python3 \
-    make \
-    g++
+    ffprobe \
+    git \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY tsconfig.json ./
-COPY vite.config.ts ./
-COPY tailwind.config.ts ./
-COPY postcss.config.js ./
-COPY components.json ./
-COPY drizzle.config.ts ./
 
 # Install dependencies
 RUN npm ci --only=production
 
 # Copy source code
-COPY shared/ ./shared/
-COPY client/ ./client/
-COPY server/ ./server/
+COPY . .
 
 # Build the application
 RUN npm run build
 
-# Production stage
-FROM node:20-alpine AS production
-
-# Install runtime dependencies
-RUN apk add --no-cache \
-    ffmpeg \
-    dumb-init
-
-WORKDIR /app
-
-# Copy built application
-COPY --from=builder /app/dist/ ./dist/
-COPY --from=builder /app/node_modules/ ./node_modules/
-COPY --from=builder /app/package*.json ./
-
-# Create temp directory for gallery processing
-RUN mkdir -p /app/temp/gallery && \
-    chown -R node:node /app
-
-# Switch to non-root user
-USER node
+# Copy built files to correct location for production serving
+RUN cp -r dist/public server/
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:5000/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-3000}/api/health || exit 1
 
 # Expose port
-EXPOSE 5000
+EXPOSE ${PORT:-3000}
 
 # Start the application
-CMD ["dumb-init", "node", "dist/server/index.js"]
+CMD ["npm", "start"]
