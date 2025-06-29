@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom pulsating animation for video play buttons */
+@keyframes pulse-video {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.2;
+  }
+}
+
+.pulse-video {
+  animation: pulse-video 2s ease-in-out infinite;
+}
+
+/* Drag and Drop Improvements */
+.dragged-faq-item,
+.dragged-section-item {
+  z-index: 2147483647 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+  transform-style: preserve-3d !important;
+}
+
+/* Disable all transitions during drag to prevent CSS conflicts */
+.dragging-section *,
+.dragging-faq * {
+  transition: none !important;
+  pointer-events: none;
+}
+
+/* Re-enable pointer events for the dragged item itself */
+.dragging-section .dragged-section-item,
+.dragging-faq .dragged-faq-item {
+  pointer-events: auto;
+}
+
+/* Add cursor feedback during drag */
+.dragging-section,
+.dragging-faq {
+  cursor: grabbing !important;
+}
+
+/* FAQ Content HTML Rendering Styles */
+.faq-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.faq-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.faq-content li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+}
+
+.faq-content p {
+  margin: 0.5rem 0;
+}
+
+.faq-content strong {
+  font-weight: 600;
+}
+
+.faq-content em {
+  font-style: italic;
+}
+
+/* Force gallery description box spacing */
+.gallery-description-tight {
+  margin-top: -3.6rem !important;
+}
+
+
+
+/* Ensure dragged elements are fully visible */
+[data-sortable-id][style*="transform"] {
+  z-index: 2147483647 !important;
+  position: relative !important;
+}
+
+/* Enhanced visual feedback for drag operations */
+.dragging-faq .drop-zone-highlight {
+  background: rgba(224, 122, 95, 0.1) !important;
+  border: 2px dashed #E07A5F !important;
+}
+
+.dragging-section .section-drop-zone {
+  background: rgba(224, 122, 95, 0.15) !important;
+  border: 3px dashed #E07A5F !important;
+}
+
+/* Apply Poppins font globally */
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Playfair Display ONLY for hero video overlay text */
+.hero-title, .hero-title * {
+  font-family: 'Playfair Display', serif !important;
+}
+
+/* Ensure HTML formatting in legal content displays properly */
+.legal-content strong {
+  font-weight: 600 !important;
+}
+
+.legal-content em {
+  font-style: italic !important;
+}
+
+.legal-content b {
+  font-weight: 600 !important;
+}
+
+.legal-content i {
+  font-style: italic !important;
+}
+
+:root {
+  --background: hsl(210, 40%, 98%);
+  --foreground: hsl(222, 84%, 4.9%);
+  --muted: hsl(210, 40%, 95%);
+  --muted-foreground: hsl(215, 16%, 46.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 84%, 4.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 84%, 4.9%);
+  --border: hsl(214, 32%, 91.2%);
+  --input: hsl(214, 32%, 91.2%);
+  --primary: hsl(214, 100%, 60%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 95%);
+  --secondary-foreground: hsl(222, 84%, 4.9%);
+  --accent: hsl(210, 40%, 95%);
+  --accent-foreground: hsl(222, 84%, 4.9%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(214, 100%, 60%);
+  --radius: 0.5rem;
+  
+  /* MEMOPYK Brand Colors */
+  --memopyk-navy: #011526;
+  --memopyk-blue: #2a4759;
+  --memopyk-sky: #89BAD9;
+  --memopyk-blue-light: #8d9fa6;
+  --memopyk-cream: #F2EBDC;
+  --memopyk-highlight: #E07A5F;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(214, 100%, 60%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .memopyk-blue {
+    color: var(--memopyk-blue);
+  }
+  
+  .bg-memopyk-blue {
+    background-color: var(--memopyk-blue);
+  }
+  
+  .border-memopyk-blue {
+    border-color: var(--memopyk-blue);
+  }
+  
+  .memopyk-blue-light {
+    color: var(--memopyk-blue-light);
+  }
+  
+  .bg-memopyk-blue-light {
+    background-color: hsl(214, 100%, 60%);
+  }
+  
+  .memopyk-amber {
+    color: hsl(43, 96%, 56%);
+  }
+  
+  .bg-memopyk-amber {
+    background-color: hsl(43, 96%, 56%);
+  }
+  
+  .memopyk-amber-light {
+    color: hsl(48, 96%, 89%);
+  }
+  
+  .bg-memopyk-amber-light {
+    background-color: hsl(48, 96%, 89%);
+  }
+}
+
+/* Enhanced pulsating animation for video play buttons with darker colors */
+@keyframes pulse-orange-enhanced {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    background-color: rgba(224, 122, 95, 0.9);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+    background-color: rgba(224, 122, 95, 1);
+  }
+}
+
+.pulse-orange-enhanced {
+  animation: pulse-orange-enhanced 1.5s ease-in-out infinite;
+  border: 2px solid rgba(224, 122, 95, 1);
+}
+
+/* Video overlay text background for better visibility */
+.video-overlay-text {
+  background: rgba(1, 21, 38, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Card flip animation for gallery items */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.flipped .transform-style-preserve-3d {
+  transform: rotateY(180deg);
+}
