@@ -3,8 +3,8 @@ FROM node:22-alpine
 # Install system dependencies including FFmpeg
 RUN apk add --no-cache \
     ffmpeg \
-    ffprobe \
     git \
+    curl \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /app
