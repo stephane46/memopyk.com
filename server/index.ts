@@ -37,33 +37,46 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode`);
+    console.log(`Database URL configured: ${process.env.DATABASE_URL ? 'YES' : 'NO'}`);
+    
+    const server = await registerRoutes(app);
+    console.log('Routes registered successfully');
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      console.error('Express error:', err);
+      res.status(status).json({ message });
+    });
 
-    res.status(status).json({ message });
-    throw err;
-  });
+    // importantly only setup vite in development and after
+    // setting up all the other routes so the catch-all route
+    // doesn't interfere with the other routes
+    if (app.get("env") === "development") {
+      console.log('Setting up Vite development server');
+      await setupVite(app, server);
+    } else {
+      console.log('Setting up static file serving for production');
+      serveStatic(app);
+    }
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    // Use PORT environment variable for production deployment
+    // or fallback to 5000 for development
+    const port = parseInt(process.env.PORT || "5000", 10);
+    console.log(`Attempting to start server on port ${port}`);
+    
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      console.log(`Server successfully started on port ${port}`);
+      log(`serving on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
   }
-
-  // Use PORT environment variable for production deployment
-  // or fallback to 5000 for development
-  const port = parseInt(process.env.PORT || "5000", 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
 })();
