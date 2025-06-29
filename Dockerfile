@@ -26,7 +26,7 @@ RUN mkdir -p server/public && cp -r dist/public/* server/public/
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-3000}/api/health || exit 1
+  CMD curl -f http://localhost:${PORT:-3000}/ || exit 1
 
 # Expose port
 EXPOSE ${PORT:-3000}
