@@ -1,65 +1,53 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useLanguage } from "@/lib/i18n";
-import { useEffect } from "react";
-import Home from "@/pages/home";
-import AlternativeHome from "@/pages/alternative-home";
-import AdminPanel from "@/pages/admin";
+import { useAuth } from "@/hooks/use-auth";
+import { AdminLayout } from "@/components/admin-layout";
+import Login from "@/pages/login";
+import Dashboard from "@/pages/dashboard";
+import HeroVideos from "@/pages/hero-videos";
+import Gallery from "@/pages/gallery";
+import FAQs from "@/pages/faqs";
+import SEOSettings from "@/pages/seo-settings";
+import Deployment from "@/pages/deployment";
+import ContentEditor from "@/pages/content-editor";
 import NotFound from "@/pages/not-found";
-import LegalNoticeEN from "@/pages/legal-notice-en";
-import LegalNoticeFR from "@/pages/legal-notice-fr";
-import PrivacyPolicy from "@/pages/privacy-policy";
-import CookiePolicy from "@/pages/cookie-policy";
-import TermsOfSale from "@/pages/terms-of-sale";
-import TermsOfUse from "@/pages/terms-of-use";
+
+function AuthenticatedApp() {
+  return (
+    <AdminLayout>
+      <Switch>
+        <Route path="/" component={Dashboard} />
+        <Route path="/hero-videos" component={HeroVideos} />
+        <Route path="/gallery" component={Gallery} />
+        <Route path="/faqs" component={FAQs} />
+        <Route path="/seo" component={SEOSettings} />
+        <Route path="/deployment" component={Deployment} />
+        <Route path="/content" component={ContentEditor} />
+        <Route component={NotFound} />
+      </Switch>
+    </AdminLayout>
+  );
+}
 
 function Router() {
-  const [location, navigate] = useLocation();
-  const { language, setLanguage } = useLanguage();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  useEffect(() => {
-    // Handle root URL redirect
-    if (location === '/') {
-      navigate(`/${language}`, { replace: true });
-      return;
-    }
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
-    // Extract language from URL
-    const urlLanguage = location.split('/')[1];
-    if (urlLanguage === 'en' || urlLanguage === 'fr') {
-      if (urlLanguage !== language) {
-        setLanguage(urlLanguage);
-      }
-    } else if (!location.startsWith('/admin')) {
-      // If no valid language in URL (except admin routes), redirect to current language
-      navigate(`/${language}${location}`, { replace: true });
-    }
-  }, [location, language, setLanguage, navigate]);
+  if (!isAuthenticated) {
+    return <Login />;
+  }
 
-  return (
-    <Switch>
-      <Route path="/en" component={Home} />
-      <Route path="/fr" component={Home} />
-      <Route path="/en/alternative" component={AlternativeHome} />
-      <Route path="/fr/alternative" component={AlternativeHome} />
-      <Route path="/en/legal-notice" component={LegalNoticeEN} />
-      <Route path="/fr/legal-notice" component={LegalNoticeFR} />
-      <Route path="/en/privacy-policy" component={PrivacyPolicy} />
-      <Route path="/fr/privacy-policy" component={PrivacyPolicy} />
-      <Route path="/en/cookie-policy" component={CookiePolicy} />
-      <Route path="/fr/cookie-policy" component={CookiePolicy} />
-      <Route path="/en/terms-of-sale" component={TermsOfSale} />
-      <Route path="/fr/terms-of-sale" component={TermsOfSale} />
-      <Route path="/en/terms-of-use" component={TermsOfUse} />
-      <Route path="/fr/terms-of-use" component={TermsOfUse} />
-      <Route path="/admin" component={AdminPanel} />
-      <Route path="/" component={() => null} /> {/* Handled by useEffect redirect */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+  return <AuthenticatedApp />;
 }
 
 function App() {

@@ -61,17 +61,6 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
-        "memopyk-navy": "var(--memopyk-navy)",
-        "memopyk-blue": "var(--memopyk-blue)",
-        "memopyk-sky": "var(--memopyk-sky)",
-        "memopyk-blue-light": "var(--memopyk-blue-light)",
-        "memopyk-cream": "var(--memopyk-cream)",
-        "memopyk-highlight": "var(--memopyk-highlight)",
-      },
-      fontFamily: {
-        'sans': ['Poppins', 'sans-serif'],
-        'poppins': ['Poppins', 'sans-serif'],
-        'playfair': ['Playfair Display', 'serif'],
       },
       keyframes: {
         "accordion-down": {
